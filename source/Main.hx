@@ -8,6 +8,9 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		addChild(new FlxGame(0, 0, PlayState));
+		AxolAPI.firstState = PlayState;
+		AxolAPI.init = Globals.initGame;
+		addChild(new FlxGame(0, 0, DissolveState));
+	
 	}
 }
