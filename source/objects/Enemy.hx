@@ -23,7 +23,7 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 	public var speedChangeDelay:Float = -1;
 	
 	public var speed:Float = 100.0;
-	public var sightRange:Int = 100;
+	public var sightRange:Int = 1000;
 	
 	public var state:EnemyState = EnemyState.Idle;
 
@@ -131,8 +131,8 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 		}
 		else
 		{
-			FlxAngle.angleBetween(this, Globals.PlayState.player);
-			FlxVelocity.moveTowardsObject(this, Globals.PlayState.player, this.speed, 10);
+			this.angle = FlxAngle.angleBetween(this, Globals.PlayState.player, true);
+			FlxVelocity.moveTowardsObject(this, Globals.PlayState.player, this.speed, 0);
 		}
 	}
 	

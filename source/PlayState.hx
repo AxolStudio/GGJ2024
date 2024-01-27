@@ -55,19 +55,19 @@ class PlayState extends FlxState
 	
 	private function createEnemies():Void
 	{
-		for (i in 0...5)
+		for (i in 0...10)
 		{
 			enemies.add(Enemy.GenerateSloop(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
 			                                FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
 		}
 		
-		for (i in 0...3)
+		for (i in 0...5)
 		{
 			enemies.add(Enemy.GenerateFrigate(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
 			                                  FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
 		}
 		
-		for (i in 0...3)
+		for (i in 0...4)
 		{
 			enemies.add(Enemy.GenerateShipOfLine(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
 			                                     FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
