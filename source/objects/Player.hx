@@ -16,6 +16,9 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 	public var nest:FlxSprite;
 
 	public var collider:ShipCollider;
+	
+	public var wallet:Wallet;
+	public var upgradeHandler:UpgradeHandler;
 
 	// public var cannons:Array<FlxSprite>; // eventually
 
@@ -63,6 +66,9 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 		
 
 		sail.animation.frameIndex = 3;
+		
+		wallet = new Wallet();
+
 
 		collider.maxVelocity.x = collider.maxVelocity.y = SPEED_PER_RANK * 3;
 		collider.drag.x = collider.drag.y = 10;
