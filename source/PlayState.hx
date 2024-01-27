@@ -1,5 +1,8 @@
 package;
 
+import interfaces.ICollider;
+import interfaces.IShip;
+import objects.Enemy;
 import flixel.math.FlxRect;
 import objects.Player.ShipCollider;
 import flixel.tile.FlxTilemap;
@@ -15,6 +18,7 @@ class PlayState extends FlxState
 
 	public static inline var BOUNDS_BUFFER:Int = 64;
 
+	public var colliders:FlxGroup;
 	public var background:FlxGroup;
 	public var islands:FlxTypedGroup<Island>;
 	public var player:Player;
@@ -29,6 +33,8 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		Globals.PlayState = this;
+
+		add(colliders = new FlxGroup());
 
 		add(background = new FlxGroup());
 
@@ -52,7 +58,6 @@ class PlayState extends FlxState
 		tileCollider = new FlxSprite();
 		tileCollider.makeGraphic(64, 64, 0xFF000000);
 
-		
 		super.create();
 	}
 
@@ -64,26 +69,33 @@ class PlayState extends FlxState
 			// TODO: some clever stuff here to make sure islands don't overlap
 			island.x = FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2) - island.width / 2;
 			island.y = FlxG.random.float(-WORLD_HEIGHT / 2, WORLD_HEIGHT / 2) - island.height / 2;
-			trace("island at " + island.x + ", " + island.y);
+
 			islands.add(island);
 		}
 	}
 
 	private function createEnemies():Void
 	{
+		var e:Enemy = null;
 		for (i in 0...10)
 		{
-			enemies.add(Enemy.GenerateSloop(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+			e = new Enemy();
+			e.spawn(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), SLOOP);
+			enemies.add(e);
 		}
 
 		for (i in 0...5)
 		{
-			enemies.add(Enemy.GenerateFrigate(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+			e = new Enemy();
+			e.spawn(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FRIGATE);
+			enemies.add(e);
 		}
 
 		for (i in 0...4)
 		{
-			enemies.add(Enemy.GenerateShipOfLine(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+			e = new Enemy();
+			e.spawn(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), SHIPOFLINE);
+			enemies.add(e);
 		}
 	}
 
@@ -92,9 +104,22 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		updateWorldBounds();
 		player.movement();
-		FlxG.collide(player.collider, islands);
+		FlxG.collide(colliders, islands);
+		FlxG.overlap(colliders, colliders, null, checkPlayerCollideShip);
 	}
 
+	private function checkPlayerCollideShip(ShipA:ICollider, ShipB:ICollider):Bool
+	{
+		var A:IShip = ShipA.parent;
+		var B:IShip = ShipB.parent;
+
+		if (CustomCollision.pixelPerfectHitboxCheck(A.hull, B.hull))
+		{
+			return FlxObject.separate(cast ShipA, cast ShipB);
+		}
+
+		return false;
+	}
 	private function updateWorldBounds():Void
 	{
 		var bounds:FlxRect = FlxRect.get(FlxG.camera.scroll.x, FlxG.camera.scroll.y, FlxG.camera.width, FlxG.camera.height);
@@ -106,6 +131,4 @@ class PlayState extends FlxState
 
 		FlxG.worldBounds.copyFrom(bounds);
 	}
-
-
 }

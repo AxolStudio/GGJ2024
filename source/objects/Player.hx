@@ -1,10 +1,11 @@
 package objects;
 
 import flixel.util.FlxDirectionFlags;
+import interfaces.ICollider;
+import interfaces.IShip;
 
 
-
-class Player extends FlxTypedSpriteGroup<FlxSprite>
+class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 {
 	public static inline var SPEED_PER_RANK:Int = 100;
 
@@ -91,11 +92,11 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 
 		if (left)
 		{
-			collider.angularVelocity = 20 * (4 - Math.abs(speedLevel)) * -1; // * FlxG.elapsed;
+			collider.angularVelocity = 30 * (4 - Math.abs(speedLevel)) * -1; // * FlxG.elapsed;
 		}
 		else if (right)
 		{
-			collider.angularVelocity = 20 * (4 - Math.abs(speedLevel)); // * FlxG.elapsed;
+			collider.angularVelocity = 30 * (4 - Math.abs(speedLevel)); // * FlxG.elapsed;
 		}
 		else
 		{
@@ -134,17 +135,17 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 		}
 		angle = collider.angle;
 
-		trace(width, height, origin.x, origin.y);
+
 		x = collider.x + collider.width / 2 - hull.origin.x;
 		y = collider.y + collider.height / 2 - hull.origin.y;
 	}
 }
 
-class ShipCollider extends FlxSprite
+class ShipCollider extends FlxSprite implements ICollider
 {
-	public var parent:Player;
+	public var parent:IShip;
 
-	public function new(Parent:Player):Void
+	public function new(Parent:IShip):Void
 	{
 		super();
 		parent = Parent;
@@ -153,6 +154,6 @@ class ShipCollider extends FlxSprite
 		centerOrigin();
 		centerOffsets();
 
-		// Globals.PlayState.add(this);
+		Globals.PlayState.colliders.add(this);
 	}
 }

@@ -1,7 +1,5 @@
 package objects;
 
-
-
 /// make a random island
 class Island extends FlxGroup // FlxTypedSpriteGroup<FlxObject>
 {
@@ -9,7 +7,6 @@ class Island extends FlxGroup // FlxTypedSpriteGroup<FlxObject>
 	public var y(get, set):Float;
 	public var width(get, never):Float;
 	public var height(get, never):Float;
-
 
 	// temporary just have a shape for now
 	private var landshape:Array<Int> = [
@@ -25,7 +22,6 @@ class Island extends FlxGroup // FlxTypedSpriteGroup<FlxObject>
 	// TODO: random island shapes - can we also create 'shore' tiles to go under the island?
 	public var base:FlxTilemap;
 	public var stuff:Array<IslandStuff> = [];
-
 
 	public function new():Void
 	{
@@ -48,9 +44,7 @@ class Island extends FlxGroup // FlxTypedSpriteGroup<FlxObject>
 				}
 			}
 		}
-
 	}
-
 
 	private function get_x():Float
 	{
@@ -91,7 +85,6 @@ class Island extends FlxGroup // FlxTypedSpriteGroup<FlxObject>
 	{
 		return base.height;
 	}
-
 }
 
 class IslandStuff extends FlxSprite
