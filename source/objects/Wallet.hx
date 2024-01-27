@@ -20,13 +20,14 @@ class Wallet
 		value -= cost;
 	}
 	
-	public function AddCoin(coin:Coin)
-	{
-		value += coin.value;
-	}
-	
 	public function AddValue(amount:Int)
 	{
 		value += amount;
+		Globals.PlayState.hud.UpdateUI();
+	}
+	
+	public function AddCoin(coin:Coin)
+	{
+		AddValue(coin.value);
 	}
 }

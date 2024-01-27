@@ -69,6 +69,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		sail.animation.frameIndex = 3;
 		
 		wallet = new Wallet();
+		upgradeHandler = new UpgradeHandler();
 
 
 		collider.maxVelocity.x = collider.maxVelocity.y = SPEED_PER_RANK * 3;

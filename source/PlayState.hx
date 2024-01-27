@@ -26,6 +26,7 @@ class PlayState extends FlxState
 	public var playerAttacks:FlxTypedGroup<Attack>;
 	public var enemyAttacks:FlxTypedGroup<Attack>;
 	public var coins:FlxTypedGroup<Coin>;
+	public var hud:Hud;
 
 	public var tileCollider:FlxSprite;
 	public var collider:FlxSprite;
@@ -49,6 +50,8 @@ class PlayState extends FlxState
 		add(playerAttacks = new FlxTypedGroup<Attack>());
 		add(enemyAttacks = new FlxTypedGroup<Attack>());
 		add(coins = new FlxTypedGroup<Coin>());
+		
+		add(hud = new Hud());
 
 		createIslands(80);
 		createEnemies();
