@@ -33,6 +33,7 @@ class PlayState extends FlxState
 		add(enemyAttacks = new FlxTypedGroup<Attack>());
 
 		createIslands(80);
+		createEnemies();
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.NO_DEAD_ZONE);
 
@@ -49,6 +50,27 @@ class PlayState extends FlxState
 			island.y = FlxG.random.float(-WORLD_HEIGHT / 2, WORLD_HEIGHT / 2) - island.height / 2;
 			trace("island at " + island.x + ", " + island.y);
 			islands.add(island);
+		}
+	} 
+	
+	private function createEnemies():Void
+	{
+		for (i in 0...5)
+		{
+			enemies.add(Enemy.GenerateSloop(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
+			                                FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+		}
+		
+		for (i in 0...3)
+		{
+			enemies.add(Enemy.GenerateFrigate(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
+			                                  FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+		}
+		
+		for (i in 0...3)
+		{
+			enemies.add(Enemy.GenerateShipOfLine(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
+			                                     FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
 		}
 	}
 
