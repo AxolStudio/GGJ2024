@@ -14,6 +14,8 @@ class PlayState extends FlxState
 
 	override public function create()
 	{
+		Globals.PlayState = this;
+		
 		add(background = new FlxGroup());
 
 		var backdrop:FlxBackdrop = new FlxBackdrop(GraphicsCache.loadGraphic("assets/images/water.png"));
