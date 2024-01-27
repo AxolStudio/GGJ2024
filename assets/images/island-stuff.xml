@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="tile_88-sprites.png">
+	<!--
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+	-->
+	<SubTexture name="tile_49.png"	x="138"	y="36"	width="34"	height="34" frameX="-16" frameY="-15" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_50.png"	x="0"	y="110"	width="54"	height="46" frameX="-5" frameY="-9" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_51.png"	x="62"	y="0"	width="40"	height="40" frameX="-12" frameY="-12" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_65.png"	x="104"	y="0"	width="34"	height="34" frameX="-16" frameY="-15" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_66.png"	x="0"	y="62"	width="54"	height="46" frameX="-5" frameY="-9" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_67.png"	x="101"	y="102"	width="40"	height="40" frameX="-12" frameY="-12" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_70.png"	x="56"	y="62"	width="44"	height="38" frameX="-10" frameY="-13" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_71.png"	x="0"	y="0"	width="60"	height="60" frameX="-3" frameY="-2" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_72.png"	x="102"	y="42"	width="34"	height="34" frameX="-17" frameY="-15" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_87.png"	x="0"	y="158"	width="16"	height="12" frameX="-24" frameY="-26" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="tile_88.png"	x="56"	y="102"	width="43"	height="40" frameX="-8" frameY="-15" frameWidth="64" frameHeight="64"/>
+</TextureAtlas>

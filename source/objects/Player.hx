@@ -1,9 +1,6 @@
 package objects;
 
-import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxAngle;
-import flixel.math.FlxMath;
-import flixel.math.FlxVelocity;
+
 
 class Player extends FlxTypedSpriteGroup<FlxSprite>
 {
@@ -50,14 +47,17 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 		sail.animation.frameIndex = 3;
 
 		maxVelocity.x = maxVelocity.y = SPEED_PER_RANK * 3;
-		drag.x = drag.y = 100;
+		drag.x = drag.y = 10;
 
 		angle = -90;
 
-		FlxG.watch.add(this, "speedLevel");
-		FlxG.watch.add(this, "angle");
-		FlxG.watch.add(this.velocity, "x");
-		FlxG.watch.add(this.velocity, "y");
+		// FlxG.watch.add(this, "speedLevel");
+		// FlxG.watch.add(this, "angle");
+		// FlxG.watch.add(this.velocity, "x");
+		// FlxG.watch.add(this.velocity, "y");
+
+		FlxG.watch.add(this, "x");
+		FlxG.watch.add(this, "y");
 	}
 
 	public function movement():Void
