@@ -1,16 +1,15 @@
 package objects;
 
-import flixel.tile.FlxBaseTilemap;
-import flixel.tile.FlxTilemap;
+
 
 /// make a random island
-class Island extends FlxGroup
+class Island extends FlxGroup // FlxTypedSpriteGroup<FlxObject>
 {
 	public var x(get, set):Float;
 	public var y(get, set):Float;
-
 	public var width(get, never):Float;
 	public var height(get, never):Float;
+
 
 	// temporary just have a shape for now
 	private var landshape:Array<Int> = [
@@ -27,11 +26,11 @@ class Island extends FlxGroup
 	public var base:FlxTilemap;
 	public var stuff:Array<IslandStuff> = [];
 
-	@:access(flixel.tile.FlxBaseTilemap._data)
-	@:access(flixel.tile.FlxTilemap.updateMap)
+
 	public function new():Void
 	{
 		super();
+
 		base = new FlxTilemap();
 		base.loadMapFromArray(landshape, 7, 7, GraphicsCache.loadGraphic("assets/images/island-tiles.png"), 64, 64, FlxTilemapAutoTiling.ALT, 0, 1, 1);
 		add(base);
@@ -49,7 +48,9 @@ class Island extends FlxGroup
 				}
 			}
 		}
+
 	}
+
 
 	private function get_x():Float
 	{
@@ -90,6 +91,7 @@ class Island extends FlxGroup
 	{
 		return base.height;
 	}
+
 }
 
 class IslandStuff extends FlxSprite
@@ -109,6 +111,8 @@ class IslandStuff extends FlxSprite
 
 		baseX = X + FlxG.random.float(-16, 16);
 		baseY = Y + FlxG.random.float(-16, 16);
+
+		allowCollisions = FlxDirectionFlags.NONE;
 
 		x = baseX;
 		y = baseY;

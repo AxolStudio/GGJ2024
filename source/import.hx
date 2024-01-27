@@ -12,3 +12,8 @@ import flixel.math.FlxMath;
 import flixel.math.FlxVelocity;
 import flixel.FlxG;
 import globals.*;
+import flixel.util.FlxDirectionFlags;
+import flixel.FlxObject;
+import flixel.tile.FlxTileblock;
+import flixel.tile.FlxBaseTilemap;
+import flixel.tile.FlxTilemap;

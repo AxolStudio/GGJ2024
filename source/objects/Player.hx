@@ -1,5 +1,7 @@
 package objects;
 
+import flixel.util.FlxDirectionFlags;
+
 
 
 class Player extends FlxTypedSpriteGroup<FlxSprite>
@@ -13,11 +15,14 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 	public var sail:FlxSprite;
 	public var nest:FlxSprite;
 
+	public var collider:ShipCollider;
+
 	// public var cannons:Array<FlxSprite>; // eventually
 
 	public function new():Void
 	{
 		super();
+
 		hull = new FlxSprite();
 		hull.loadGraphic(GraphicsCache.loadGraphic("assets/images/ship-base.png"), false, 108, 40, false, "ship-base");
 		sail = new FlxSprite();
@@ -28,36 +33,47 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 		hull.origin.x = 44;
 		hull.origin.y = 19;
 
+
 		sail.origin.x = 35;
 		sail.origin.y = 33;
 
 		nest.origin.x = 49;
 		nest.origin.y = 10;
 
-		sail.x = hull.x + 9;
-		sail.y = hull.y + (hull.height / 2) - (sail.height / 2);
+		sail.x = hull.origin.x - sail.origin.x;
+		sail.y = hull.origin.y - sail.origin.y;
 
-		nest.x = hull.x - 5;
-		nest.y = hull.y + (hull.height / 2) - (nest.height / 2);
+		nest.x = hull.origin.x - nest.origin.x;
+		nest.y = hull.origin.y - nest.origin.y;
 
+		hull.allowCollisions = nest.allowCollisions = sail.allowCollisions = FlxDirectionFlags.NONE;
+
+		collider = new ShipCollider(this);
+
+		// add(collider);
 		add(hull);
 		add(sail);
 		add(nest);
 
+		// width = hull.width;
+		// height = hull.height;
+
+		// origin.x = hull.width / 2;
+		// origin.y = hull.height / 2;
+		
+
 		sail.animation.frameIndex = 3;
 
-		maxVelocity.x = maxVelocity.y = SPEED_PER_RANK * 3;
-		drag.x = drag.y = 10;
+		collider.maxVelocity.x = collider.maxVelocity.y = SPEED_PER_RANK * 3;
+		collider.drag.x = collider.drag.y = 10;
 
-		angle = -90;
+		collider.angle = -90;
+	}
 
-		// FlxG.watch.add(this, "speedLevel");
-		// FlxG.watch.add(this, "angle");
-		// FlxG.watch.add(this.velocity, "x");
-		// FlxG.watch.add(this.velocity, "y");
-
-		FlxG.watch.add(this, "x");
-		FlxG.watch.add(this, "y");
+	public function spawn(X:Float, Y:Float):Void
+	{
+		collider.x = X;
+		collider.y = Y;
 	}
 
 	public function movement():Void
@@ -69,15 +85,15 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 
 		if (left)
 		{
-			angularVelocity = -300;
+			collider.angularVelocity = 20 * (4 - Math.abs(speedLevel)) * -1; // * FlxG.elapsed;
 		}
 		else if (right)
 		{
-			angularVelocity = 300;
+			collider.angularVelocity = 20 * (4 - Math.abs(speedLevel)); // * FlxG.elapsed;
 		}
 		else
 		{
-			angularVelocity = 0;
+			collider.angularVelocity = 0;
 		}
 
 		if (speedChangeDelay <= 0)
@@ -97,17 +113,40 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 		}
 
 		if (speedLevel == 0)
-			acceleration.x = acceleration.y = 0;
+			collider.acceleration.x = collider.acceleration.y = 0;
 		else
-			FlxVelocity.accelerateFromAngle(this, FlxAngle.asRadians(angle), 100, SPEED_PER_RANK * speedLevel, false);
+			FlxVelocity.accelerateFromAngle(collider, FlxAngle.asRadians(collider.angle), 100, SPEED_PER_RANK * speedLevel, false);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
 		if (speedChangeDelay > 0)
 		{
 			speedChangeDelay -= elapsed;
 		}
+		angle = collider.angle;
+
+		trace(width, height, origin.x, origin.y);
+		x = collider.x + collider.width / 2 - hull.origin.x;
+		y = collider.y + collider.height / 2 - hull.origin.y;
+	}
+}
+
+class ShipCollider extends FlxSprite
+{
+	public var parent:Player;
+
+	public function new(Parent:Player):Void
+	{
+		super();
+		parent = Parent;
+		makeGraphic(Std.int(parent.hull.width) + 30, Std.int(parent.hull.width) + 30, 0xff000000);
+
+		centerOrigin();
+		centerOffsets();
+
+		// Globals.PlayState.add(this);
 	}
 }

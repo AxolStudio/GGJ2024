@@ -14,8 +14,7 @@ class Coin extends FlxTypedSpriteGroup<FlxSprite>
 		
 		sprite = new FlxSprite();
 		
-		FlxG.watch.add(this, "x");
-		FlxG.watch.add(this, "y");
+
 		
 	}
 	

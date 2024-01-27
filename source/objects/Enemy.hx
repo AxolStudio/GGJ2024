@@ -71,13 +71,6 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 
 		angle = -90;
 
-		// FlxG.watch.add(this, "speedLevel");
-		// FlxG.watch.add(this, "angle");
-		// FlxG.watch.add(this.velocity, "x");
-		// FlxG.watch.add(this.velocity, "y");
-
-		FlxG.watch.add(this, "x");
-		FlxG.watch.add(this, "y");
 	}
 	
 	public static function GenerateSloop(x:Float, y:Float):Enemy

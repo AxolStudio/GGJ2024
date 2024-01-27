@@ -1,5 +1,9 @@
 package;
 
+import flixel.math.FlxRect;
+import objects.Player.ShipCollider;
+import flixel.tile.FlxTilemap;
+import flixel.FlxObject;
 import flixel.addons.display.FlxBackdrop;
 import flixel.FlxCamera;
 import flixel.FlxState;
@@ -9,6 +13,8 @@ class PlayState extends FlxState
 	public static inline var WORLD_WIDTH:Int = 10000;
 	public static inline var WORLD_HEIGHT:Int = 10000;
 
+	public static inline var BOUNDS_BUFFER:Int = 64;
+
 	public var background:FlxGroup;
 	public var islands:FlxTypedGroup<Island>;
 	public var player:Player;
@@ -17,10 +23,13 @@ class PlayState extends FlxState
 	public var enemyAttacks:FlxTypedGroup<Attack>;
 	public var coins:FlxTypedGroup<Coin>;
 
+	public var tileCollider:FlxSprite;
+	public var collider:FlxSprite;
+
 	override public function create()
 	{
 		Globals.PlayState = this;
-		
+
 		add(background = new FlxGroup());
 
 		var backdrop:FlxBackdrop = new FlxBackdrop(GraphicsCache.loadGraphic("assets/images/water.png"));
@@ -30,6 +39,7 @@ class PlayState extends FlxState
 
 		add(enemies = new FlxTypedGroup<Enemy>());
 		add(player = new Player());
+		player.spawn(0, 0);
 		add(playerAttacks = new FlxTypedGroup<Attack>());
 		add(enemyAttacks = new FlxTypedGroup<Attack>());
 		add(coins = new FlxTypedGroup<Coin>());
@@ -39,6 +49,10 @@ class PlayState extends FlxState
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.NO_DEAD_ZONE);
 
+		tileCollider = new FlxSprite();
+		tileCollider.makeGraphic(64, 64, 0xFF000000);
+
+		
 		super.create();
 	}
 
@@ -53,34 +67,45 @@ class PlayState extends FlxState
 			trace("island at " + island.x + ", " + island.y);
 			islands.add(island);
 		}
-	} 
-	
+	}
+
 	private function createEnemies():Void
 	{
 		for (i in 0...10)
 		{
-			enemies.add(Enemy.GenerateSloop(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
-			                                FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+			enemies.add(Enemy.GenerateSloop(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
 		}
-		
+
 		for (i in 0...5)
 		{
-			enemies.add(Enemy.GenerateFrigate(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
-			                                  FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+			enemies.add(Enemy.GenerateFrigate(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
 		}
-		
+
 		for (i in 0...4)
 		{
-			enemies.add(Enemy.GenerateShipOfLine(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2),
-			                                     FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
+			enemies.add(Enemy.GenerateShipOfLine(FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2), FlxG.random.float(-WORLD_WIDTH / 2, WORLD_WIDTH / 2)));
 		}
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		updateWorldBounds();
 		player.movement();
-		FlxG.collide(player, islands);
+		FlxG.collide(player.collider, islands);
 	}
+
+	private function updateWorldBounds():Void
+	{
+		var bounds:FlxRect = FlxRect.get(FlxG.camera.scroll.x, FlxG.camera.scroll.y, FlxG.camera.width, FlxG.camera.height);
+
+		bounds.x -= BOUNDS_BUFFER;
+		bounds.y -= BOUNDS_BUFFER;
+		bounds.width += BOUNDS_BUFFER * 2;
+		bounds.height += BOUNDS_BUFFER * 2;
+
+		FlxG.worldBounds.copyFrom(bounds);
+	}
+
 
 }
