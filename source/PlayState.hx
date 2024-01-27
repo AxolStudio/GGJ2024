@@ -15,6 +15,7 @@ class PlayState extends FlxState
 	public var enemies:FlxTypedGroup<Enemy>;
 	public var playerAttacks:FlxTypedGroup<Attack>;
 	public var enemyAttacks:FlxTypedGroup<Attack>;
+	public var coins:FlxTypedGroup<Coin>;
 
 	override public function create()
 	{
@@ -31,6 +32,7 @@ class PlayState extends FlxState
 		add(player = new Player());
 		add(playerAttacks = new FlxTypedGroup<Attack>());
 		add(enemyAttacks = new FlxTypedGroup<Attack>());
+		add(coins = new FlxTypedGroup<Coin>());
 
 		createIslands(80);
 		createEnemies();

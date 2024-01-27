@@ -1,7 +1,5 @@
 package objects;
 
-//import flixel.Math;
-
 // TODO: Change into a FlxSpriteGroup object and load different ship compponents
 //      set them up similar to the player's ship - add some randomization elements etc
 //      movement can use `FlxVelocity.moveTowardsObject` to move towards the player and
@@ -26,6 +24,8 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 	public var sightRange:Int = 1000;
 	
 	public var state:EnemyState = EnemyState.Idle;
+	
+	public var plunder:Plunder = new Plunder(3, 2, 1);
 
 	public var hull:FlxSprite;
 	public var sail:FlxSprite;
@@ -83,30 +83,58 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 	public static function GenerateSloop(x:Float, y:Float):Enemy
 	{
 		var newEnemy = new Enemy(x, y);
-		newEnemy.speed = 250;
+		
+		var minSpeed = 235;
+		var maxSpeed = 265;
+		newEnemy.speed = FlxG.random.int(minSpeed, maxSpeed);
+		
 		newEnemy.hull.scale.set(0.5, 0.5);
 		newEnemy.sail.scale.set(0.5, 0.5);
 		newEnemy.nest.scale.set(0.5, 0.5);
+		
+		newEnemy.plunder.copper = FlxG.random.int(2, 5);
+		newEnemy.plunder.silver = FlxG.random.int(0, 1);
+		newEnemy.plunder.gold   = 0;
+		
+		
 		return newEnemy;
 	}
 	
 	public static function GenerateFrigate(x:Float, y:Float):Enemy
 	{
 		var newEnemy = new Enemy(x, y);
-		newEnemy.speed = 180;
+		
+		var minSpeed = 165;
+		var maxSpeed = 195;
+		newEnemy.speed = FlxG.random.int(minSpeed, maxSpeed);
+		
 		//newEnemy.hull.scale.set(1, 1);
 		//newEnemy.sail.scale.set(1, 1);
 		//newEnemy.nest.scale.set(1, 1);
+		
+		newEnemy.plunder.copper = FlxG.random.int(4, 7);
+		newEnemy.plunder.silver = FlxG.random.int(2, 5);
+		newEnemy.plunder.gold   = FlxG.random.int(0, 1);
+		
 		return newEnemy;
 	}
 	
 	public static function GenerateShipOfLine(x:Float, y:Float):Enemy
 	{
 		var newEnemy = new Enemy(x, y);
-		newEnemy.speed = 120;
+		
+		var minSpeed = 105;
+		var maxSpeed = 135;
+		newEnemy.speed = FlxG.random.int(minSpeed, maxSpeed);
+		
 		newEnemy.hull.scale.set(2, 2);
 		newEnemy.sail.scale.set(2, 2);
 		newEnemy.nest.scale.set(2, 2);
+		
+		newEnemy.plunder.copper = FlxG.random.int(6, 9);
+		newEnemy.plunder.silver = FlxG.random.int(4, 7);
+		newEnemy.plunder.gold   = FlxG.random.int(2, 5);
+		
 		return newEnemy;
 	}
 	
@@ -137,6 +165,9 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 	
 	public function HandleChasing()
 	{
+		// Todo, remove, just for testing.
+		plunder.Drop(x, y);
+		
 		if (IsPlayerInSight() == false)
 		{
 			SetState(EnemyState.Idle);
