@@ -64,7 +64,7 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 		add(sail);
 		add(nest);
 
-		sail.animation.frameIndex = 3;
+		sail.animation.frameIndex = 0;
 
 		maxVelocity.x = maxVelocity.y = SPEED_PER_RANK * 3;
 		drag.x = drag.y = 10;
@@ -83,18 +83,30 @@ class Enemy extends FlxTypedSpriteGroup<FlxSprite>
 	public static function GenerateSloop(x:Float, y:Float):Enemy
 	{
 		var newEnemy = new Enemy(x, y);
+		newEnemy.speed = 250;
+		newEnemy.hull.scale.set(0.5, 0.5);
+		newEnemy.sail.scale.set(0.5, 0.5);
+		newEnemy.nest.scale.set(0.5, 0.5);
 		return newEnemy;
 	}
 	
 	public static function GenerateFrigate(x:Float, y:Float):Enemy
 	{
 		var newEnemy = new Enemy(x, y);
+		newEnemy.speed = 180;
+		//newEnemy.hull.scale.set(1, 1);
+		//newEnemy.sail.scale.set(1, 1);
+		//newEnemy.nest.scale.set(1, 1);
 		return newEnemy;
 	}
 	
 	public static function GenerateShipOfLine(x:Float, y:Float):Enemy
 	{
 		var newEnemy = new Enemy(x, y);
+		newEnemy.speed = 120;
+		newEnemy.hull.scale.set(2, 2);
+		newEnemy.sail.scale.set(2, 2);
+		newEnemy.nest.scale.set(2, 2);
 		return newEnemy;
 	}
 	
