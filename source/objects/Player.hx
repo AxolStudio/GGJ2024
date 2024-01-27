@@ -15,17 +15,19 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 	public var hull:FlxSprite;
 	public var sail:FlxSprite;
 	public var nest:FlxSprite;
+	public var gun:FlxSprite;
 
 	public var collider:ShipCollider;
 	
 	public var wallet:Wallet;
 	public var upgradeHandler:UpgradeHandler;
 
-	// public var cannons:Array<FlxSprite>; // eventually
+	// public var cannons:Array<FlxSprite> = []; // eventually
+	// public var cannonPoints:Array<Array<Float>> = [[72, 12, 0, 38, 0], [39, -9, -90], [39, 20, 90]];
 
 	public function new():Void
 	{
-		super();
+		super( );
 
 		hull = new FlxSprite();
 		hull.loadGraphic(GraphicsCache.loadGraphic("assets/images/ship-base.png"), false, 108, 40, false, "ship-base");
@@ -34,9 +36,11 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		nest = new FlxSprite();
 		nest.loadGraphic(GraphicsCache.loadGraphic("assets/images/ship-nest.png"), false, 18, 20, false, "ship-nest");
 
+		gun = new FlxSprite();
+		gun.loadGraphic(GraphicsCache.loadGraphic("assets/images/cannon.png"), false, 29, 16, false, "cannon");
+
 		hull.origin.x = 44;
 		hull.origin.y = 19;
-
 
 		sail.origin.x = 35;
 		sail.origin.y = 33;
@@ -44,27 +48,29 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		nest.origin.x = 49;
 		nest.origin.y = 10;
 
+		gun.origin.x = 7;
+		gun.origin.y = 8;
+
 		sail.x = hull.origin.x - sail.origin.x;
 		sail.y = hull.origin.y - sail.origin.y;
 
 		nest.x = hull.origin.x - nest.origin.x;
 		nest.y = hull.origin.y - nest.origin.y;
 
-		hull.allowCollisions = nest.allowCollisions = sail.allowCollisions = FlxDirectionFlags.NONE;
+		gun.x = hull.origin.x - gun.origin.x;
+		gun.y = hull.origin.y - gun.origin.y;
 
-		collider = new ShipCollider(this);
+		gun.allowCollisions = hull.allowCollisions = nest.allowCollisions = sail.allowCollisions = FlxDirectionFlags.NONE;
 
-		// add(collider);
+
 		add(hull);
+
 		add(sail);
 		add(nest);
 
-		// width = hull.width;
-		// height = hull.height;
+		add(gun);
 
-		// origin.x = hull.width / 2;
-		// origin.y = hull.height / 2;
-		
+		collider = new ShipCollider(this);
 
 		sail.animation.frameIndex = 3;
 		
