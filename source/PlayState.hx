@@ -8,6 +8,7 @@ class PlayState extends FlxState
 {
 	public var background:FlxGroup;
 	public var player:Player;
+	public var ocean:Ocean;
 	public var enemies:FlxTypedGroup<Enemy>;
 	public var playerAttacks:FlxTypedGroup<Attack>;
 	public var enemyAttacks:FlxTypedGroup<Attack>;
@@ -25,6 +26,8 @@ class PlayState extends FlxState
 		add(enemyAttacks = new FlxTypedGroup<Attack>());
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.NO_DEAD_ZONE);
+		
+		ocean = Ocean.Generate();
 
 		super.create();
 	}
