@@ -12,6 +12,9 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 	public var hull:FlxSprite;
 	public var sail:FlxSprite;
 	public var nest:FlxSprite;
+	
+	public var wallet:Wallet;
+	public var upgradeHandler:UpgradeHandler;
 
 	// public var cannons:Array<FlxSprite>; // eventually
 
@@ -50,6 +53,8 @@ class Player extends FlxTypedSpriteGroup<FlxSprite>
 		drag.x = drag.y = 10;
 
 		angle = -90;
+		
+		wallet = new Wallet();
 
 		// FlxG.watch.add(this, "speedLevel");
 		// FlxG.watch.add(this, "angle");
