@@ -4,7 +4,6 @@ import flixel.util.FlxDirectionFlags;
 import interfaces.ICollider;
 import interfaces.IShip;
 
-
 class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 {
 	public static inline var SPEED_PER_RANK:Int = 100;
@@ -15,32 +14,29 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 	public var hull:FlxSprite;
 	public var sail:FlxSprite;
 	public var nest:FlxSprite;
-	public var gun:FlxSprite;
 
 	public var collider:ShipCollider;
-	
+
 	public var wallet:Wallet;
 	public var upgradeHandler:UpgradeHandler;
 
-	// public var cannons:Array<FlxSprite> = []; // eventually
-	// public var cannonPoints:Array<Array<Float>> = [[72, 12, 0, 38, 0], [39, -9, -90], [39, 20, 90]];
+	public var gunBarrels:Array<FlxPoint> = [];
+	public var gunCooldown:Float = .5;
+	public var cooldowns:Array<Float> = [0, 0, 0];
 
 	public function new():Void
 	{
-		super( );
+		super();
 
 		hull = new FlxSprite();
-		hull.loadGraphic(GraphicsCache.loadGraphic("assets/images/ship-base.png"), false, 108, 40, false, "ship-base");
+		hull.loadGraphic(GraphicsCache.loadGraphic("assets/images/ship-base.png"), false, 108, 58, false, "ship-base");
 		sail = new FlxSprite();
 		sail.loadGraphic(GraphicsCache.loadGraphic("assets/images/sail.png"), true, 46, 66, false, "sail");
 		nest = new FlxSprite();
 		nest.loadGraphic(GraphicsCache.loadGraphic("assets/images/ship-nest.png"), false, 18, 20, false, "ship-nest");
 
-		gun = new FlxSprite();
-		gun.loadGraphic(GraphicsCache.loadGraphic("assets/images/cannon.png"), false, 29, 16, false, "cannon");
-
 		hull.origin.x = 44;
-		hull.origin.y = 19;
+		hull.origin.y = 28;
 
 		sail.origin.x = 35;
 		sail.origin.y = 33;
@@ -48,40 +44,33 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		nest.origin.x = 49;
 		nest.origin.y = 10;
 
-		gun.origin.x = 7;
-		gun.origin.y = 8;
-
 		sail.x = hull.origin.x - sail.origin.x;
 		sail.y = hull.origin.y - sail.origin.y;
 
 		nest.x = hull.origin.x - nest.origin.x;
 		nest.y = hull.origin.y - nest.origin.y;
 
-		gun.x = hull.origin.x - gun.origin.x;
-		gun.y = hull.origin.y - gun.origin.y;
-
-		gun.allowCollisions = hull.allowCollisions = nest.allowCollisions = sail.allowCollisions = FlxDirectionFlags.NONE;
-
+		hull.allowCollisions = nest.allowCollisions = sail.allowCollisions = FlxDirectionFlags.NONE;
 
 		add(hull);
 
 		add(sail);
 		add(nest);
 
-		add(gun);
-
 		collider = new ShipCollider(this);
 
 		sail.animation.frameIndex = 3;
-		
+
 		wallet = new Wallet();
 		upgradeHandler = new UpgradeHandler();
-
 
 		collider.maxVelocity.x = collider.maxVelocity.y = SPEED_PER_RANK * 3;
 		collider.drag.x = collider.drag.y = 10;
 
 		collider.angle = -90;
+		collider.angularDrag = 100;
+		gunBarrels = [FlxPoint.get(57, 0), FlxPoint.get(12, -29), FlxPoint.get(12, 29)];
+		immovable = true;
 	}
 
 	public function spawn(X:Float, Y:Float):Void
@@ -97,18 +86,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		var left:Bool = Actions.left.triggered && !Actions.right.triggered;
 		var right:Bool = Actions.right.triggered && !Actions.left.triggered;
 
-		if (left)
-		{
-			collider.angularVelocity = 30 * (4 - Math.abs(speedLevel)) * -1; // * FlxG.elapsed;
-		}
-		else if (right)
-		{
-			collider.angularVelocity = 30 * (4 - Math.abs(speedLevel)); // * FlxG.elapsed;
-		}
-		else
-		{
-			collider.angularVelocity = 0;
-		}
+		
 
 		if (speedChangeDelay <= 0)
 		{
@@ -126,10 +104,76 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			}
 		}
 
+		collider.maxAngular = 30 * (4 - Math.abs(speedLevel));
+
+		if (left)
+		{
+			collider.angularAcceleration = 300 * -1; // * FlxG.elapsed;
+		}
+		else if (right)
+		{
+			collider.angularAcceleration = 300; // * FlxG.elapsed;
+		}
+		else
+		{
+			collider.angularAcceleration = 0;
+		}
+
 		if (speedLevel == 0)
+		{
 			collider.acceleration.x = collider.acceleration.y = 0;
+			collider.angularAcceleration = 0;
+		}
 		else
 			FlxVelocity.accelerateFromAngle(collider, FlxAngle.asRadians(collider.angle), 100, SPEED_PER_RANK * speedLevel, false);
+
+		var fore:Bool = Actions.fireFore.triggered || Actions.fireAll.triggered;
+		var port:Bool = Actions.firePort.triggered || Actions.fireAll.triggered;
+		var star:Bool = Actions.fireStar.triggered || Actions.fireAll.triggered;
+
+		if (fore)
+		{
+			fire(FireDirections.FORE);
+		}
+		if (port)
+		{
+			fire(FireDirections.PORT);
+		}
+		if (star)
+		{
+			fire(FireDirections.STARBOARD);
+		}
+	}
+
+	public function fire(Direction:FireDirections, Count:Int = 1):Void
+	{
+		var p:FlxPoint = FlxPoint.get();
+		if ((Direction == FireDirections.FORE || Direction == FireDirections.ALL) && cooldowns[0] <= 0)
+		{
+			p.copyFrom(gunBarrels[0]);
+			p.degrees += hull.angle;
+			p += hull.origin + hull.getPosition();
+			Globals.PlayState.firePies(p.x, p.y, hull.angle, Count);
+			cooldowns[0] = gunCooldown;
+		}
+		if ((Direction == FireDirections.PORT || Direction == FireDirections.ALL) && cooldowns[1] <= 0)
+		{
+			p.copyFrom(gunBarrels[1]);
+			p.degrees += hull.angle;
+			p += hull.origin + hull.getPosition();
+			Globals.PlayState.firePies(p.x, p.y, hull.angle - 90, Count);
+			cooldowns[1] = gunCooldown;
+		}
+		if ((Direction == FireDirections.STARBOARD || Direction == FireDirections.ALL) && cooldowns[2] <= 0)
+		{
+			p.copyFrom(gunBarrels[2]);
+			p.degrees += hull.angle;
+			p += hull.origin + hull.getPosition();
+			Globals.PlayState.firePies(p.x, p.y, hull.angle + 90, Count);
+			cooldowns[2] = gunCooldown;
+		}
+
+		p.put();
 	}
 
 	override public function update(elapsed:Float)
@@ -142,9 +186,16 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		}
 		angle = collider.angle;
 
-
 		x = collider.x + collider.width / 2 - hull.origin.x;
 		y = collider.y + collider.height / 2 - hull.origin.y;
+
+		for (i in 0...cooldowns.length)
+		{
+			if (cooldowns[i] > 0)
+			{
+				cooldowns[i] -= elapsed;
+			}
+		}
 	}
 }
 
@@ -163,4 +214,12 @@ class ShipCollider extends FlxSprite implements ICollider
 
 		Globals.PlayState.colliders.add(this);
 	}
+}
+
+enum abstract FireDirections(String)
+{
+	var FORE = "fore";
+	var PORT = "port";
+	var STARBOARD = "starboard";
+	var ALL = "all";
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="enemy-2-whole-sprites">
+	<!--
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+	-->
+	<SubTexture name="enemy-1-dead" x="115" y="84" width="45" height="26" frameX="-0" frameY="-0" frameWidth="45" frameHeight="26"/>
+	<SubTexture name="enemy-1-whole" x="162" y="84" width="45" height="26" frameX="-0" frameY="-0" frameWidth="45" frameHeight="26"/>
+	<SubTexture name="enemy-2-dead" x="115" y="42" width="68" height="40" frameX="-0" frameY="-0" frameWidth="68" frameHeight="40"/>
+	<SubTexture name="enemy-2-whole" x="115" y="0" width="68" height="40" frameX="-0" frameY="-0" frameWidth="68" frameHeight="40"/>
+	<SubTexture name="enemy-3-dead" x="0" y="136" width="90" height="53" frameX="-0" frameY="-0" frameWidth="90" frameHeight="53"/>
+	<SubTexture name="enemy-3-whole" x="92" y="136" width="90" height="53" frameX="-0" frameY="-0" frameWidth="90" frameHeight="53"/>
+	<SubTexture name="enemy-4-dead" x="0" y="68" width="113" height="66" frameX="-0" frameY="-0" frameWidth="113" frameHeight="66"/>
+	<SubTexture name="enemy-4-whole" x="0" y="0" width="113" height="66" frameX="-0" frameY="-0" frameWidth="113" frameHeight="66"/>
+</TextureAtlas>
