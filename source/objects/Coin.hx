@@ -7,12 +7,15 @@ enum CoinState
 	Idle;
 	Seeking;
 	Acquired;
+	ToCoinPile;
 }
 
 class Coin extends FlxTypedSpriteGroup<FlxSprite>
 {
 	
 	public var sprite:FlxSprite;
+	public var whiteStarSprite:FlxSprite;
+	
 	public var value:Int;
 	
 	public var state:CoinState = CoinState.Idle;
@@ -28,8 +31,11 @@ class Coin extends FlxTypedSpriteGroup<FlxSprite>
 		
 		sprite = new FlxSprite();
 		
-
+		whiteStarSprite = new FlxSprite();
+		whiteStarSprite.loadGraphic(GraphicsCache.loadGraphic("assets/images/WhiteStar.png"), false, 16, 16, false, "white-star");
+		whiteStarSprite.visible = false;
 		
+		add(whiteStarSprite);
 	}
 	
 	public static function GenerateCopper(x:Float, y:Float):Coin
@@ -86,6 +92,10 @@ class Coin extends FlxTypedSpriteGroup<FlxSprite>
 			case CoinState.Acquired:
 				Globals.PlayState.player.wallet.AddCoin(this);
 				FlxTween.tween(this,{alpha:0},.2, {onComplete:(_)->{this.kill();}});
+				
+			case CoinState.ToCoinPile:
+				whiteStarSprite.visible = true;
+				sprite.visible = false;
 		}
 	}
 	
@@ -101,6 +111,15 @@ class Coin extends FlxTypedSpriteGroup<FlxSprite>
 	{
 		FlxVelocity.moveTowardsObject(this, Globals.PlayState.player, 0, seekTimeMS);
 		if (FlxMath.distanceBetween(this, Globals.PlayState.player) < 10)
+		{
+			SetState(CoinState.ToCoinPile);
+		}
+	}
+	
+	public function HandleToCoinPile()
+	{
+		FlxVelocity.moveTowardsPoint(this, Globals.PlayState.hud.GetCoinPileMouthLoc(), 0, seekTimeMS*10);
+		if (FlxMath.distanceToPoint(this, Globals.PlayState.hud.GetCoinPileMouthLoc()) < 10)
 		{
 			SetState(CoinState.Acquired);
 		}
@@ -118,6 +137,9 @@ class Coin extends FlxTypedSpriteGroup<FlxSprite>
 				
 			case CoinState.Acquired:
 				null;
+				
+			case CoinState.ToCoinPile:
+				HandleToCoinPile();
 		}
 	}
 	

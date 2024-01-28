@@ -4,7 +4,7 @@ import flixel.text.FlxText;
 
 class Hud extends FlxTypedGroup<FlxSprite>
 {
-	var coinPileIcon:FlxSprite;
+	public var coinPileIcon:FlxSprite;
 	var coinPileCounter:FlxText;
 	
 	public function new():Void
@@ -25,5 +25,10 @@ class Hud extends FlxTypedGroup<FlxSprite>
 	public function UpdateUI()
 	{
 		coinPileCounter.text = Std.string(Globals.PlayState.player.wallet.value);
+	}
+	
+	public function GetCoinPileMouthLoc():FlxPoint
+	{
+		return FlxPoint.weak(Globals.PlayState.player.x, Globals.PlayState.player.y-FlxG.height+16);
 	}
 }
