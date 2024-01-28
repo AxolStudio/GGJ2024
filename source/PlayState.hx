@@ -235,6 +235,7 @@ class PlayState extends FlxState
 		C.kill();
 		PlayerMoney += C.value;
 		hud.UpdateUI();
+		Sounds.playSound(Sounds.coins[Std.random(Sounds.coins.length)]);
 	}
 
 	private function checkGetCoin(P:ICollider, C:Coin):Bool
@@ -258,6 +259,7 @@ class PlayState extends FlxState
 	{
 		E.hurt(P.damage);
 		P.kill();
+		Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
 
 		// explosion?
 	}

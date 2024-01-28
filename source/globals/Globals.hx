@@ -16,6 +16,8 @@ class Globals
 
 		Actions.init();
 
+		Sounds.loadSounds();
+
 		createUpgradeOptions();
 
 		initialized = true;

@@ -1,5 +1,6 @@
 package ui;
 
+import flixel.system.FlxSound;
 import ui.GameButton;
 import flixel.util.FlxAxes;
 import flixel.ui.FlxButton;
@@ -15,14 +16,17 @@ class UpgradeSubState extends FlxSubState
 
 	public var ready:Bool = false;
 
+
 	public function new():Void
 	{
 		super();
 		FlxG.mouse.visible = true;
+
 	}
 
 	override public function create():Void
 	{
+
 		add(frame = new Frame(FlxG.width * .85, FlxG.height * .85, BROWN));
 		frame.scrollFactor.set();
 		frame.screenCenter();
@@ -65,6 +69,8 @@ class UpgradeSubState extends FlxSubState
 				upgrade.button.enabled = false;
 			}
 		}
+		Sounds.playSound("Map open 1");
+
 		super.create();
 	}
 
@@ -76,6 +82,7 @@ class UpgradeSubState extends FlxSubState
 			Globals.PlayState.PlayerUpgrades = [];
 		Globals.PlayState.PlayerUpgrades.push(Which);
 		Globals.PlayState.PlayerMoney -= Globals.upgradeOptions.get(Which).cost;
+		Sounds.playSound("Upgrade purchase");
 		switch (Which)
 		{
 			case "Pie-Cannons II":
@@ -116,6 +123,7 @@ class UpgradeSubState extends FlxSubState
 		if (Actions.openShop.triggered && ready)
 		{
 			ready = false;
+			Sounds.playSound("Map close 1");
 			close();
 		}
 

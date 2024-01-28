@@ -29,7 +29,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 	public var maxHealth:Int = 100;
 	public var pullPower:Float = 192;
 
-	public var honk:FlxSound;
+
 	public var hornReady:Bool = true;
 
 	public function new():Void
@@ -76,6 +76,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		collider.angularDrag = 100;
 		gunBarrels = [FlxPoint.get(57, 0), FlxPoint.get(12, -29), FlxPoint.get(12, 29)];
 		immovable = true;
+
 	}
 
 	public function repair(Amount:Int):Void
@@ -159,13 +160,9 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		{
 			if (Actions.honk.triggered)
 			{
-				if (honk == null)
-				{
-					honk = new FlxSound();
-					honk.loadEmbedded("assets/sounds/honk.wav");
-				}
+
 				hornReady = false;
-				honk.play(true);
+				Sounds.playSound("honk");
 				FlxTween.tween(scale, {x: 1.2, y: 1.2}, 0.25, {
 					ease: FlxEase.backIn,
 					type: FlxTweenType.ONESHOT,
@@ -212,6 +209,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			Globals.PlayState.firePies(p.x, p.y, hull.angle + 90, gunLevel);
 			cooldowns[2] = gunCooldown;
 		}
+		Sounds.playSound(Sounds.shots[Std.random(Sounds.shots.length)]);
 
 		p.put();
 	}
