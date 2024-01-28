@@ -1,5 +1,7 @@
 package;
 
+import objects.Coin.CoinType;
+import js.html.Cache;
 import ui.UpgradeSubState;
 import interfaces.ICollider;
 import interfaces.IShip;
@@ -24,18 +26,20 @@ class PlayState extends FlxState
 	public var colliders:FlxGroup;
 	public var background:FlxGroup;
 	public var islands:FlxTypedGroup<Island>;
+	public var coins:FlxTypedGroup<Coin>;
 	public var player:Player;
 	public var enemies:FlxTypedGroup<Enemy>;
 	public var playerAttacks:FlxTypedGroup<Pie>;
 	public var gunPuffs:FlxTypedGroup<GunPuff>;
 	// public var enemyAttacks:FlxTypedGroup<Attack>;
-	public var coins:FlxTypedGroup<Coin>;
+
 	public var hud:Hud;
 
 	public var tileCollider:FlxSprite;
 	public var collider:FlxSprite;
 
 	public var PlayerMoney:Int = 0;
+	public var PlayerUpgrades:Array<String> = [];
 
 	override public function create()
 	{
@@ -49,7 +53,11 @@ class PlayState extends FlxState
 		background.add(backdrop);
 
 		add(islands = new FlxTypedGroup<Island>());
-
+		add(coins = new FlxTypedGroup<Coin>());
+		for (i in 0...100)
+		{
+			coins.add(new Coin());
+		}
 		add(enemies = new FlxTypedGroup<Enemy>());
 		add(player = new Player());
 		player.spawn(-player.width / 2, -player.height / 2);
@@ -62,8 +70,6 @@ class PlayState extends FlxState
 			gunPuffs.add(new GunPuff());
 		}
 
-		add(coins = new FlxTypedGroup<Coin>());
-
 		add(hud = new Hud());
 
 		generateStuff();
@@ -74,6 +80,17 @@ class PlayState extends FlxState
 		tileCollider.makeGraphic(64, 64, 0xFF000000);
 
 		super.create();
+	}
+
+	public function spawnCoin(X:Float, Y:Float, CType:CoinType):Void
+	{
+		var coin:Coin = coins.getFirstAvailable(Coin);
+		if (coin == null)
+		{
+			coin = new Coin();
+			coins.add(coin);
+		}
+		coin.spawn(X, Y, CType);
 	}
 
 	public function firePie(X:Float, Y:Float, Angle:Float, Rank:Int):Void
@@ -204,12 +221,29 @@ class PlayState extends FlxState
 		}
 
 		player.movement();
-		FlxG.collide(colliders, islands);
+		FlxG.collide(player.collider, islands);
 		FlxG.collide(enemies, islands);
 		FlxG.collide(enemies, enemies);
 
-		FlxG.overlap(colliders, enemies, null, checkPlayerCollideShip);
+		FlxG.overlap(player.collider, enemies, null, checkPlayerCollideShip);
 		FlxG.overlap(enemies, playerAttacks, pieHitShip, checkPieHitShip);
+		FlxG.overlap(player.collider, coins, getCoin, checkGetCoin);
+	}
+
+	private function getCoin(P:ICollider, C:Coin):Void
+	{
+		C.kill();
+		PlayerMoney += C.value;
+		hud.UpdateUI();
+	}
+
+	private function checkGetCoin(P:ICollider, C:Coin):Bool
+	{
+		var p:Player = cast P.parent;
+		if (p.alive && p.exists && C.alive && C.exists)
+			return CustomCollision.pixelPerfectHitboxCheck(p.hull, C);
+
+		return false;
 	}
 
 	private function checkPieHitShip(E:FlxSprite, P:Pie):Bool

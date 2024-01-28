@@ -24,6 +24,7 @@ class Actions
 	public static var fireAll:FlxActionDigital;
 
 	public static var openShop:FlxActionDigital;
+	public static var honk:FlxActionDigital;
 
 	public static function init():Void
 	{
@@ -44,6 +45,7 @@ class Actions
 		Actions.fireAll = new FlxActionDigital();
 
 		Actions.openShop = new FlxActionDigital();
+		Actions.honk = new FlxActionDigital();
 
 		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [
 			Actions.up,
@@ -55,7 +57,7 @@ class Actions
 			Actions.firePort,
 			Actions.fireStar,
 			Actions.fireAll,
-			Actions.openShop
+			Actions.openShop, Actions.honk
 		]);
 
 		gameplayIndex = Actions.actions.addSet(gameSet);
@@ -94,6 +96,10 @@ class Actions
 		Actions.fireAll.addGamepad(B, PRESSED);
 
 		Actions.openShop.addKey(SPACE, JUST_PRESSED);
+		Actions.openShop.addGamepad(GUIDE, JUST_PRESSED);
+
+		Actions.honk.addKey(H, JUST_PRESSED);
+		Actions.honk.addGamepad(RIGHT_SHOULDER, JUST_PRESSED);
 
 		Actions.actions.activateSet(Actions.gameplayIndex, FlxInputDevice.ALL, FlxInputDeviceID.ALL);
 	}
