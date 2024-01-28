@@ -30,8 +30,9 @@ class PlayState extends FlxState
 	public var player:Player;
 	public var enemies:FlxTypedGroup<Enemy>;
 	public var playerAttacks:FlxTypedGroup<Pie>;
+	public var enemyAttacks:FlxTypedGroup<Attack>;
 	public var gunPuffs:FlxTypedGroup<GunPuff>;
-	// public var enemyAttacks:FlxTypedGroup<Attack>;
+
 
 	public var hud:Hud;
 
@@ -62,7 +63,7 @@ class PlayState extends FlxState
 		add(player = new Player());
 		player.spawn(-player.width / 2, -player.height / 2);
 		add(playerAttacks = new FlxTypedGroup<Pie>());
-		// add(enemyAttacks = new FlxTypedGroup<Attack>());
+		add(enemyAttacks = new FlxTypedGroup<Attack>());
 
 		add(gunPuffs = new FlxTypedGroup<GunPuff>());
 		for (i in 0...10)
@@ -93,25 +94,55 @@ class PlayState extends FlxState
 		coin.spawn(X, Y, CType);
 	}
 
-	public function firePie(Owner:FlxSprite, X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	public function firePie(X:Float, Y:Float, Angle:Float, Rank:Int):Void
 	{
 		var pie:Pie = playerAttacks.recycle(Pie, Pie.new);
-		pie.spawn(Owner, X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
+		pie.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
 	}
 
-	public function firePies(Owner:FlxSprite, X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	public function firePies(X:Float, Y:Float, Angle:Float, Rank:Int):Void
 	{
 		switch (Rank)
 		{
 			case 1:
-				firePie(Owner, X, Y, Angle, Rank);
+				firePie(X, Y, Angle, Rank);
 			case 2:
-				firePie(Owner, X, Y, Angle - 10, Rank);
-				firePie(Owner, X, Y, Angle + 10, Rank);
+				firePie(X, Y, Angle - 10, Rank);
+				firePie(X, Y, Angle + 10, Rank);
 			case 3:
-				firePie(Owner, X, Y, Angle - 20, Rank);
-				firePie(Owner, X, Y, Angle, Rank);
-				firePie(Owner, X, Y, Angle + 20, Rank);
+				firePie(X, Y, Angle - 20, Rank);
+				firePie(X, Y, Angle, Rank);
+				firePie(X, Y, Angle + 20, Rank);
+		}
+		// do a cloud of cannon smoke
+		var puff:GunPuff = gunPuffs.getFirstAvailable(GunPuff);
+		if (puff == null)
+		{
+			puff = new GunPuff();
+			gunPuffs.add(puff);
+		}
+		puff.spawn(X, Y, Angle);
+	}
+
+	public function fireCannonBall(X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	{
+		var attack:Attack = enemyAttacks.recycle(Attack, Attack.new);
+		attack.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
+	}
+
+	public function fireCannon(X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	{
+		switch (Rank)
+		{
+			case 1:
+				fireCannonBall(X, Y, Angle, Rank);
+			case 2:
+				fireCannonBall(X, Y, Angle, Rank);
+				fireCannonBall(X, Y, Angle, Rank);
+			case 3:
+				fireCannonBall(X, Y, Angle - 20, Rank);
+				fireCannonBall(X, Y, Angle, Rank);
+				fireCannonBall(X, Y, Angle + 20, Rank);
 		}
 		// do a cloud of cannon smoke
 		var puff:GunPuff = gunPuffs.getFirstAvailable(GunPuff);
@@ -227,7 +258,28 @@ class PlayState extends FlxState
 
 		FlxG.overlap(player.collider, enemies, null, checkPlayerCollideShip);
 		FlxG.overlap(enemies, playerAttacks, pieHitShip, checkPieHitShip);
+		FlxG.overlap(player.collider, enemyAttacks, attackHitShip, checkAttackHitShip);
 		FlxG.overlap(player.collider, coins, getCoin, checkGetCoin);
+	}
+
+	private function attackHitShip(P:ICollider, A:Attack):Void
+	{
+		var p:Player = cast P.parent;
+		if (p.alive && p.exists && A.alive && A.exists)
+		{
+			p.hurt(A.damage);
+			A.kill();
+			Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
+		}
+	}
+
+	private function checkAttackHitShip(P:ICollider, A:Attack):Bool
+	{
+		var p:Player = cast P.parent;
+		if (p.alive && p.exists && A.alive && A.exists)
+			return CustomCollision.pixelPerfectHitboxCheck(p.hull, A);
+
+		return false;
 	}
 
 	private function getCoin(P:ICollider, C:Coin):Void
@@ -249,7 +301,7 @@ class PlayState extends FlxState
 
 	private function checkPieHitShip(E:FlxSprite, P:Pie):Bool
 	{
-		if (E.alive && E.exists && P.alive && P.exists && (P.owner != E))
+		if (E.alive && E.exists && P.alive && P.exists)
 			return CustomCollision.pixelPerfectHitboxCheck(E, P);
 
 		return false;

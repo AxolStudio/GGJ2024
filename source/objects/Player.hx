@@ -190,7 +190,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			p.copyFrom(gunBarrels[0]);
 			p.degrees += hull.angle;
 			p += hull.origin + hull.getPosition();
-			Globals.PlayState.firePies(this, p.x, p.y, hull.angle, gunLevel);
+			Globals.PlayState.firePies( p.x, p.y, hull.angle, gunLevel);
 			cooldowns[0] = gunCooldown;
 		}
 		if ((Direction == FireDirections.PORT || Direction == FireDirections.ALL) && cooldowns[1] <= 0)
@@ -198,7 +198,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			p.copyFrom(gunBarrels[1]);
 			p.degrees += hull.angle;
 			p += hull.origin + hull.getPosition();
-			Globals.PlayState.firePies(this, p.x, p.y, hull.angle - 90, gunLevel);
+			Globals.PlayState.firePies( p.x, p.y, hull.angle - 90, gunLevel);
 			cooldowns[1] = gunCooldown;
 		}
 		if ((Direction == FireDirections.STARBOARD || Direction == FireDirections.ALL) && cooldowns[2] <= 0)
@@ -206,7 +206,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			p.copyFrom(gunBarrels[2]);
 			p.degrees += hull.angle;
 			p += hull.origin + hull.getPosition();
-			Globals.PlayState.firePies(this, p.x, p.y, hull.angle + 90, gunLevel);
+			Globals.PlayState.firePies( p.x, p.y, hull.angle + 90, gunLevel);
 			cooldowns[2] = gunCooldown;
 		}
 		Sounds.playSound(Sounds.shots[Std.random(Sounds.shots.length)]);

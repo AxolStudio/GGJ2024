@@ -247,24 +247,24 @@ class Enemy extends FlxSprite
 	public function fire(Direction:EnemyFireDirections):Void
 	{
 		var p:FlxPoint = FlxPoint.get();
-		p = this.getPosition();
+		p = getPosition();
 		
 		switch(Direction)
 		{
 			case EnemyFireDirections.FORE:
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle, 1);
+				Globals.PlayState.fireCannon( p.x, p.y, angle, 1);
 			
 			case EnemyFireDirections.PORT_AND_STARBOARD:
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle-90, 1);
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle+90, 1);
+				Globals.PlayState.fireCannon( p.x, p.y, angle-90, 1);
+				Globals.PlayState.fireCannon( p.x, p.y, angle+90, 1);
 			
 			case EnemyFireDirections.CONE:
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle, 2);
+				Globals.PlayState.fireCannon( p.x, p.y, angle, 2);
 			
 			case EnemyFireDirections.BROADSIDE:
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle-90, 1);
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle-90, 1);
-				Globals.PlayState.firePies(this, p.x, p.y, this.angle-90, 1);
+				Globals.PlayState.fireCannon( p.x, p.y, angle-90, 1);
+				Globals.PlayState.fireCannon( p.x, p.y, angle-90, 1);
+				Globals.PlayState.fireCannon( p.x, p.y, angle-90, 1);
 			
 		}
 		
