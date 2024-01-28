@@ -4,6 +4,7 @@ class Pie extends FlxSprite
 {
 	public var lifespan:Float;
 	public var damage:Int = 1;
+	public var owner:FlxSprite = null;
 
 	override public function update(elapsed:Float):Void
 	{
@@ -23,7 +24,7 @@ class Pie extends FlxSprite
 		centerOffsets();
 	}
 
-	public function spawn(X:Float, Y:Float, Angle:Float, Lifespan:Float, Damage:Int = 1):Void
+	public function spawn(Owner:FlxSprite, X:Float, Y:Float, Angle:Float, Lifespan:Float, Damage:Int = 1):Void
 	{
 		reset(X - width / 2, Y - height / 2);
 		angle = Angle;
@@ -31,5 +32,6 @@ class Pie extends FlxSprite
 		velocity.y = Math.sin(angle * Math.PI / 180) * 400;
 		damage = Damage;
 		lifespan = Lifespan;
+		owner = Owner;
 	}
 }

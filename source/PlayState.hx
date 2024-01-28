@@ -93,25 +93,25 @@ class PlayState extends FlxState
 		coin.spawn(X, Y, CType);
 	}
 
-	public function firePie(X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	public function firePie(Owner:FlxSprite, X:Float, Y:Float, Angle:Float, Rank:Int):Void
 	{
 		var pie:Pie = playerAttacks.recycle(Pie, Pie.new);
-		pie.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
+		pie.spawn(Owner, X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
 	}
 
-	public function firePies(X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	public function firePies(Owner:FlxSprite, X:Float, Y:Float, Angle:Float, Rank:Int):Void
 	{
 		switch (Rank)
 		{
 			case 1:
-				firePie(X, Y, Angle, Rank);
+				firePie(Owner, X, Y, Angle, Rank);
 			case 2:
-				firePie(X, Y, Angle - 10, Rank);
-				firePie(X, Y, Angle + 10, Rank);
+				firePie(Owner, X, Y, Angle - 10, Rank);
+				firePie(Owner, X, Y, Angle + 10, Rank);
 			case 3:
-				firePie(X, Y, Angle - 20, Rank);
-				firePie(X, Y, Angle, Rank);
-				firePie(X, Y, Angle + 20, Rank);
+				firePie(Owner, X, Y, Angle - 20, Rank);
+				firePie(Owner, X, Y, Angle, Rank);
+				firePie(Owner, X, Y, Angle + 20, Rank);
 		}
 		// do a cloud of cannon smoke
 		var puff:GunPuff = gunPuffs.getFirstAvailable(GunPuff);
@@ -248,7 +248,7 @@ class PlayState extends FlxState
 
 	private function checkPieHitShip(E:FlxSprite, P:Pie):Bool
 	{
-		if (E.alive && E.exists && P.alive && P.exists)
+		if (E.alive && E.exists && P.alive && P.exists && (P.owner != E))
 			return CustomCollision.pixelPerfectHitboxCheck(E, P);
 
 		return false;
