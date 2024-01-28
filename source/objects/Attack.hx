@@ -4,6 +4,7 @@ class Attack extends FlxSprite
 {
 	public var lifespan:Float;
 	public var damage:Int = 1;
+	public var owner:Enemy;
 
 	override public function update(elapsed:Float):Void
 	{
@@ -23,7 +24,7 @@ class Attack extends FlxSprite
 		centerOffsets();
 	}
 
-	public function spawn(X:Float, Y:Float, Angle:Float, Lifespan:Float, Damage:Int = 1):Void
+	public function spawn(X:Float, Y:Float, Angle:Float, Lifespan:Float, Damage:Int = 1, Owner:Enemy):Void
 	{
 		reset(X - width / 2, Y - height / 2);
 		angle = Angle;
@@ -31,5 +32,6 @@ class Attack extends FlxSprite
 		velocity.y = Math.sin(angle * Math.PI / 180) * 400;
 		damage = Damage;
 		lifespan = Lifespan;
+		owner = Owner;
 	}
 }

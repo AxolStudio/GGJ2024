@@ -113,7 +113,7 @@ class PlayState extends FlxState
 	public function firePie(X:Float, Y:Float, Angle:Float, Rank:Int):Void
 	{
 		var pie:Pie = playerAttacks.recycle(Pie, Pie.new);
-		pie.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
+		pie.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank);
 	}
 
 	public function firePies(X:Float, Y:Float, Angle:Float, Rank:Int):Void
@@ -140,25 +140,25 @@ class PlayState extends FlxState
 		puff.spawn(X, Y, Angle);
 	}
 
-	public function fireCannonBall(X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	public function fireCannonBall(Owner:Enemy, X:Float, Y:Float, Angle:Float, Rank:Int):Void
 	{
 		var attack:Attack = enemyAttacks.recycle(Attack, Attack.new);
-		attack.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank * 2);
+		attack.spawn(X, Y, Angle, 1 + Rank * 0.5, Rank * 2, Owner);
 	}
 
-	public function fireCannon(X:Float, Y:Float, Angle:Float, Rank:Int):Void
+	public function fireCannon(X:Float, Y:Float, Angle:Float, Rank:Int, Owner:Enemy):Void
 	{
 		switch (Rank)
 		{
 			case 1:
-				fireCannonBall(X, Y, Angle, Rank);
+				fireCannonBall(Owner, X, Y, Angle, Rank);
 			case 2:
-				fireCannonBall(X, Y, Angle, Rank);
-				fireCannonBall(X, Y, Angle, Rank);
+				fireCannonBall(Owner, X, Y, Angle, Rank);
+				fireCannonBall(Owner, X, Y, Angle, Rank);
 			case 3:
-				fireCannonBall(X, Y, Angle - 20, Rank);
-				fireCannonBall(X, Y, Angle, Rank);
-				fireCannonBall(X, Y, Angle + 20, Rank);
+				fireCannonBall(Owner, X, Y, Angle - 20, Rank);
+				fireCannonBall(Owner, X, Y, Angle, Rank);
+				fireCannonBall(Owner, X, Y, Angle + 20, Rank);
 		}
 		// do a cloud of cannon smoke
 		var puff:GunPuff = gunPuffs.getFirstAvailable(GunPuff);
@@ -315,7 +315,7 @@ class PlayState extends FlxState
 
 	private function checkAttackHitEShip(E:Enemy, A:Attack):Bool
 	{
-		if (E.alive && E.exists && A.alive && A.exists)
+		if (E.alive && E.exists && A.alive && A.exists && A.owner != E)
 			return CustomCollision.pixelPerfectHitboxCheck(E, A);
 
 		return false;

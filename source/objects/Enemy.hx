@@ -256,19 +256,19 @@ class Enemy extends FlxSprite
 		switch(Direction)
 		{
 			case EnemyFireDirections.FORE:
-				Globals.PlayState.fireCannon( p.x, p.y, angle, 1);
+				Globals.PlayState.fireCannon(p.x, p.y, angle, 1, this);
 			
 			case EnemyFireDirections.PORT_AND_STARBOARD:
-				Globals.PlayState.fireCannon( p.x, p.y, angle-90, 1);
-				Globals.PlayState.fireCannon( p.x, p.y, angle+90, 1);
+				Globals.PlayState.fireCannon(p.x, p.y, angle - 90, 1, this);
+				Globals.PlayState.fireCannon(p.x, p.y, angle + 90, 1, this);
 			
 			case EnemyFireDirections.CONE:
-				Globals.PlayState.fireCannon(p.x, p.y, angle, 3);
+				Globals.PlayState.fireCannon(p.x, p.y, angle, 3, this);
 			
 			case EnemyFireDirections.BROADSIDE:
-				Globals.PlayState.fireCannon(p.x, p.y, angle - 90, 3);
-				Globals.PlayState.fireCannon(p.x, p.y, angle, 3);
-				Globals.PlayState.fireCannon(p.x, p.y, angle + 90, 3);
+				Globals.PlayState.fireCannon(p.x, p.y, angle - 90, 3, this);
+				Globals.PlayState.fireCannon(p.x, p.y, angle, 3, this);
+				Globals.PlayState.fireCannon(p.x, p.y, angle + 90, 3, this);
 			
 		}
 		
