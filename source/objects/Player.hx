@@ -29,7 +29,6 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 	public var maxHealth:Int = 100;
 	public var pullPower:Float = 192;
 
-
 	public var hornReady:Bool = true;
 
 	public function new():Void
@@ -77,6 +76,14 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		gunBarrels = [FlxPoint.get(57, 0), FlxPoint.get(12, -29), FlxPoint.get(12, 29)];
 		immovable = true;
 
+		health = maxHealth;
+	}
+
+	override public function kill():Void
+	{
+		alive = false;
+		exists = true;
+		velocity.set();
 	}
 
 	public function repair(Amount:Int):Void
@@ -160,7 +167,6 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		{
 			if (Actions.honk.triggered)
 			{
-
 				hornReady = false;
 				Sounds.playSound("honk");
 				FlxTween.tween(scale, {x: 1.2, y: 1.2}, 0.25, {
@@ -190,7 +196,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			p.copyFrom(gunBarrels[0]);
 			p.degrees += hull.angle;
 			p += hull.origin + hull.getPosition();
-			Globals.PlayState.firePies( p.x, p.y, hull.angle, gunLevel);
+			Globals.PlayState.firePies(p.x, p.y, hull.angle, gunLevel);
 			cooldowns[0] = gunCooldown;
 		}
 		if ((Direction == FireDirections.PORT || Direction == FireDirections.ALL) && cooldowns[1] <= 0)
@@ -198,7 +204,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			p.copyFrom(gunBarrels[1]);
 			p.degrees += hull.angle;
 			p += hull.origin + hull.getPosition();
-			Globals.PlayState.firePies( p.x, p.y, hull.angle - 90, gunLevel);
+			Globals.PlayState.firePies(p.x, p.y, hull.angle - 90, gunLevel);
 			cooldowns[1] = gunCooldown;
 		}
 		if ((Direction == FireDirections.STARBOARD || Direction == FireDirections.ALL) && cooldowns[2] <= 0)
@@ -206,7 +212,7 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 			p.copyFrom(gunBarrels[2]);
 			p.degrees += hull.angle;
 			p += hull.origin + hull.getPosition();
-			Globals.PlayState.firePies( p.x, p.y, hull.angle + 90, gunLevel);
+			Globals.PlayState.firePies(p.x, p.y, hull.angle + 90, gunLevel);
 			cooldowns[2] = gunCooldown;
 		}
 		Sounds.playSound(Sounds.shots[Std.random(Sounds.shots.length)]);
@@ -217,6 +223,8 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		if (!alive)
+			return;
 
 		if (speedChangeDelay > 0)
 		{

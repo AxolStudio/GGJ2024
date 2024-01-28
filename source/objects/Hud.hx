@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.ui.FlxBar;
 import ui.GameText;
 import flixel.text.FlxText;
 
@@ -7,6 +8,10 @@ class Hud extends FlxTypedGroup<FlxSprite>
 {
 	public var coinPileIcon:FlxSprite;
 	public var coinPileCounter:GameText;
+
+	public var shipHealthBar:FlxBar;
+	public var playerXP:FLxBar;
+	public var playerLevel:GameText;
 
 	public function new():Void
 	{

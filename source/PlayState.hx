@@ -31,8 +31,8 @@ class PlayState extends FlxState
 	public var enemies:FlxTypedGroup<Enemy>;
 	public var playerAttacks:FlxTypedGroup<Pie>;
 	public var enemyAttacks:FlxTypedGroup<Attack>;
+	public var explosions:FlxTypedGroup<Explosion>;
 	public var gunPuffs:FlxTypedGroup<GunPuff>;
-
 
 	public var hud:Hud;
 
@@ -41,6 +41,9 @@ class PlayState extends FlxState
 
 	public var PlayerMoney:Int = 0;
 	public var PlayerUpgrades:Array<String> = [];
+
+	public var PlayerXP:Int = 0;
+	public var PlayerLevel:Int = 0;
 
 	override public function create()
 	{
@@ -64,7 +67,7 @@ class PlayState extends FlxState
 		player.spawn(-player.width / 2, -player.height / 2);
 		add(playerAttacks = new FlxTypedGroup<Pie>());
 		add(enemyAttacks = new FlxTypedGroup<Attack>());
-
+		add(explosions = new FlxTypedGroup<Explosion>());
 		add(gunPuffs = new FlxTypedGroup<GunPuff>());
 		for (i in 0...10)
 		{
@@ -81,6 +84,17 @@ class PlayState extends FlxState
 		tileCollider.makeGraphic(64, 64, 0xFF000000);
 
 		super.create();
+	}
+
+	public function spawnExplosion(X:Float, Y:Float):Void
+	{
+		var explosion:Explosion = explosions.getFirstAvailable(Explosion);
+		if (explosion == null)
+		{
+			explosion = new Explosion();
+			explosions.add(explosion);
+		}
+		explosion.spawn(X, Y);
 	}
 
 	public function spawnCoin(X:Float, Y:Float, CType:CoinType):Void
@@ -239,7 +253,6 @@ class PlayState extends FlxState
 		}
 	}
 
-
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -259,6 +272,7 @@ class PlayState extends FlxState
 		FlxG.overlap(player.collider, enemies, null, checkPlayerCollideShip);
 		FlxG.overlap(enemies, playerAttacks, pieHitShip, checkPieHitShip);
 		FlxG.overlap(player.collider, enemyAttacks, attackHitShip, checkAttackHitShip);
+		FlxG.overlap(enemies, enemyAttacks, attackHitEShip, checkAttackHitEShip);
 		FlxG.overlap(player.collider, coins, getCoin, checkGetCoin);
 	}
 
@@ -267,6 +281,7 @@ class PlayState extends FlxState
 		var p:Player = cast P.parent;
 		if (p.alive && p.exists && A.alive && A.exists)
 		{
+			spawnExplosion(A.x + A.origin.x, A.y + A.origin.y);
 			p.hurt(A.damage);
 			A.kill();
 			Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
@@ -278,6 +293,25 @@ class PlayState extends FlxState
 		var p:Player = cast P.parent;
 		if (p.alive && p.exists && A.alive && A.exists)
 			return CustomCollision.pixelPerfectHitboxCheck(p.hull, A);
+
+		return false;
+	}
+
+	private function attackHitEShip(E:Enemy, A:Attack):Void
+	{
+		if (E.alive && E.exists && A.alive && A.exists)
+		{
+			spawnExplosion(A.x + A.origin.x, A.y + A.origin.y);
+			E.hurt(A.damage);
+			A.kill();
+			Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
+		}
+	}
+
+	private function checkAttackHitEShip(E:Enemy, A:Attack):Bool
+	{
+		if (E.alive && E.exists && A.alive && A.exists)
+			return CustomCollision.pixelPerfectHitboxCheck(E, A);
 
 		return false;
 	}
@@ -309,6 +343,7 @@ class PlayState extends FlxState
 
 	private function pieHitShip(E:FlxSprite, P:Pie):Void
 	{
+		spawnExplosion(P.x + P.origin.x, P.y + P.origin.y);
 		E.hurt(P.damage);
 		P.kill();
 		Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
