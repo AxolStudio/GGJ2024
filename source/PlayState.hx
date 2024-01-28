@@ -3,6 +3,7 @@ package;
 import objects.Coin.CoinType;
 import js.html.Cache;
 import ui.UpgradeSubState;
+import ui.XPBar;
 import interfaces.ICollider;
 import interfaces.IShip;
 import objects.Enemy;
@@ -41,10 +42,9 @@ class PlayState extends FlxState
 
 	public var PlayerMoney:Int = 0;
 	public var PlayerUpgrades:Array<String> = [];
-
-	public var PlayerXP:Int = 0;
-	public var PlayerLevel:Int = 0;
-
+	
+	public var xpBar:XPBar;
+	
 	override public function create()
 	{
 		Globals.PlayState = this;
@@ -75,6 +75,8 @@ class PlayState extends FlxState
 		}
 
 		add(hud = new Hud());
+		
+		add(xpBar = new XPBar());
 
 		generateStuff();
 

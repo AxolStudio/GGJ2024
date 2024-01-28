@@ -7,14 +7,17 @@ class Plunder
 	public var copper:Int;
 	public var silver:Int;
 	public var gold:Int;
+	
+	public var xp:Int;
 
 	public var isPlunderDropped = false;
 
-	public function new(c:Int, s:Int, g:Int)
+	public function new(c:Int, s:Int, g:Int, XP:Int)
 	{
 		copper = c;
 		silver = s;
 		gold = g;
+		xp = XP;
 	}
 
 	public function Drop(x:Float, y:Float)
@@ -41,6 +44,8 @@ class Plunder
 			{
 				Globals.PlayState.spawnCoin(FlxG.random.float(minX, maxX), FlxG.random.float(minY, maxY), CoinType.GOLD);
 			}
+			
+			Globals.PlayState.xpBar.AddXP(xp);
 
 			isPlunderDropped = true;
 		}

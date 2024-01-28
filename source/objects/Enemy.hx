@@ -19,7 +19,7 @@ class Enemy extends FlxSprite
 
 	public var state:EnemyState = EnemyState.Idle;
 
-	public var plunder:Plunder = new Plunder(3, 2, 1);
+	public var plunder:Plunder = new Plunder(3, 2, 1, 0);
 
 	public var fireFrom:Array<FlxPoint> = [];
 
@@ -78,6 +78,7 @@ class Enemy extends FlxSprite
 				plunder.copper = FlxG.random.int(2, 5);
 				plunder.silver = FlxG.random.int(0, 1);
 				plunder.gold = 0;
+				plunder.xp = 10;
 				health = 5;
 				defaultFireDirection = EnemyFireDirections.FORE;
 			case 2:
@@ -87,6 +88,7 @@ class Enemy extends FlxSprite
 				plunder.copper = FlxG.random.int(4, 7);
 				plunder.silver = FlxG.random.int(2, 5);
 				plunder.gold = FlxG.random.int(0, 1);
+				plunder.xp = 25;
 				health = 10;
 				defaultFireDirection = EnemyFireDirections.PORT_AND_STARBOARD;
 				
@@ -96,6 +98,7 @@ class Enemy extends FlxSprite
 				plunder.copper = FlxG.random.int(6, 9);
 				plunder.silver = FlxG.random.int(4, 7);
 				plunder.gold = FlxG.random.int(2, 5);
+				plunder.xp = 45;
 				health = 15;
 				defaultFireDirection = EnemyFireDirections.CONE;
 				
@@ -105,6 +108,7 @@ class Enemy extends FlxSprite
 				plunder.copper = FlxG.random.int(10, 15);
 				plunder.silver = FlxG.random.int(8, 14);
 				plunder.gold = FlxG.random.int(5, 12);
+				plunder.xp = 70;
 				health = 20;
 				defaultFireDirection = EnemyFireDirections.BROADSIDE;
 		}
