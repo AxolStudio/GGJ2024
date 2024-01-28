@@ -307,6 +307,9 @@ class PlayState extends FlxState
 			E.hurt(A.damage);
 			A.kill();
 			Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
+			
+			// Give a small amount of XP when a pie hits an enemy ship.
+			xpBar.AddXP(5);
 		}
 	}
 
