@@ -25,13 +25,13 @@ class Globals
 	private static function createUpgradeOptions():Void
 	{
 		upgradeOptions.set("Pie-Cannons II", new UpgradeOption("Pie-Cannons II", 250, "pie-cannon-2", 1));
-		upgradeOptions.set("Pie-Cannons III", new UpgradeOption("Pie-Cannons III", 500, "pie-cannon-3", "pie-cannon-2", 2));
+		upgradeOptions.set("Pie-Cannons III", new UpgradeOption("Pie-Cannons III", 500, "pie-cannon-3", "Pie-Cannons II", 2));
 		upgradeOptions.set("Plunder Puller", new UpgradeOption("Plunder Puller", 50, "plunder-puller", "", 3));
-		upgradeOptions.set("Plunder Puller II", new UpgradeOption("Plunder Puller II", 125, "plunder-puller-2", "plunder-puller", 4));
-		upgradeOptions.set("Plunder Puller III", new UpgradeOption("Plunder Puller III", 250, "plunder-puller-3", "plunder-puller-2", 5));
+		upgradeOptions.set("Plunder Puller II", new UpgradeOption("Plunder Puller II", 125, "plunder-puller-2", "Plunder Puller", 4));
+		upgradeOptions.set("Plunder Puller III", new UpgradeOption("Plunder Puller III", 250, "plunder-puller-3", "Plunder Puller II", 5));
 		upgradeOptions.set("Hull HP+", new UpgradeOption("Hull HP+", 75, "hull-hp", "", 6));
-		upgradeOptions.set("Hull HP++", new UpgradeOption("Hull HP++", 150, "hull-hp-2", "hull-hp", 7));
-		upgradeOptions.set("Hull HP+++", new UpgradeOption("Hull HP+++", 300, "hull-hp-3", "hull-hp-2", 8));
+		upgradeOptions.set("Hull HP++", new UpgradeOption("Hull HP++", 150, "hull-hp-2", "Hull HP+", 7));
+		upgradeOptions.set("Hull HP+++", new UpgradeOption("Hull HP+++", 300, "hull-hp-3", "Hull HP++", 8));
 		upgradeOptions.set("Clown Horn", new UpgradeOption("Clown Horn", 500, "clown-horn", "", 9));
 	}
 

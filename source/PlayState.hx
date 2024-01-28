@@ -3,6 +3,7 @@ package;
 import objects.Coin.CoinType;
 import js.html.Cache;
 import ui.UpgradeSubState;
+import ui.HealthBar;
 import ui.XPBar;
 import interfaces.ICollider;
 import interfaces.IShip;
@@ -44,6 +45,7 @@ class PlayState extends FlxState
 	public var PlayerUpgrades:Array<String> = [];
 	
 	public var xpBar:XPBar;
+	public var healthBar:HealthBar;
 	
 	override public function create()
 	{
@@ -76,7 +78,9 @@ class PlayState extends FlxState
 
 		add(hud = new Hud());
 		
-		add(xpBar = new XPBar());
+		add(xpBar     = new XPBar());
+		add(healthBar = new HealthBar());
+		healthBar.updateBar(); // Depends on player being initialized first.
 
 		generateStuff();
 
@@ -286,6 +290,8 @@ class PlayState extends FlxState
 			spawnExplosion(A.x + A.origin.x, A.y + A.origin.y);
 			p.hurt(A.damage);
 			A.kill();
+			
+			Globals.PlayState.healthBar.updateBar();
 			Sounds.playSound(Sounds.impacts[Std.random(Sounds.impacts.length)]);
 		}
 	}

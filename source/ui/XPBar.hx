@@ -1,6 +1,5 @@
 package ui;
 
-//import flixel.FlxState;
 import flixel.ui.FlxBar;
 
 class XPBar extends FlxTypedGroup<FlxSprite>
@@ -13,7 +12,7 @@ class XPBar extends FlxTypedGroup<FlxSprite>
 	{
 		super();
 		
-		_bar = new FlxBar(FlxG.width/2-80, 80, LEFT_TO_RIGHT, 160, 25, null, "", 0, 100, true);
+		_bar = new FlxBar(FlxG.width/2+80, 25, LEFT_TO_RIGHT, 200, 25, null, "", 0, 100, true);
 		
 		add(_bar);
 		
