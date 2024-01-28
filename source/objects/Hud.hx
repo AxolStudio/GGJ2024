@@ -24,7 +24,7 @@ class Hud extends FlxTypedGroup<FlxSprite>
 	
 	public function UpdateUI()
 	{
-		coinPileCounter.text = Std.string(Globals.PlayState.player.wallet.value);
+		coinPileCounter.text = Std.string(Globals.PlayState.PlayerMoney);
 	}
 	
 	public function GetCoinPileMouthLoc():FlxPoint

@@ -17,9 +17,6 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 
 	public var collider:ShipCollider;
 
-	public var wallet:Wallet;
-	public var upgradeHandler:UpgradeHandler;
-
 	public var gunBarrels:Array<FlxPoint> = [];
 	public var gunCooldown:Float = .5;
 	public var cooldowns:Array<Float> = [0, 0, 0];
@@ -61,8 +58,6 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 
 		sail.animation.frameIndex = 3;
 
-		wallet = new Wallet();
-		upgradeHandler = new UpgradeHandler();
 
 		collider.maxVelocity.x = collider.maxVelocity.y = SPEED_PER_RANK * 3;
 		collider.drag.x = collider.drag.y = 10;

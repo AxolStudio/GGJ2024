@@ -1,5 +1,6 @@
 package;
 
+import ui.UpgradeSubState;
 import interfaces.ICollider;
 import interfaces.IShip;
 import objects.Enemy;
@@ -33,6 +34,8 @@ class PlayState extends FlxState
 
 	public var tileCollider:FlxSprite;
 	public var collider:FlxSprite;
+
+	public var PlayerMoney:Int = 0;
 
 	override public function create()
 	{
@@ -192,7 +195,14 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
 		updateWorldBounds();
+		if (Actions.openShop.triggered)
+		{
+			openSubState(new UpgradeSubState());
+			return;
+		}
+
 		player.movement();
 		FlxG.collide(colliders, islands);
 		FlxG.collide(enemies, islands);

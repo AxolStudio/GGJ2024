@@ -90,7 +90,8 @@ class Coin extends FlxTypedSpriteGroup<FlxSprite>
 				null;
 				
 			case CoinState.Acquired:
-				Globals.PlayState.player.wallet.AddCoin(this);
+				// Globals.PlayState.player.wallet.AddCoin(this);
+				Globals.PlayState.PlayerMoney+=value;
 				FlxTween.tween(this,{alpha:0},.2, {onComplete:(_)->{this.kill();}});
 				
 			case CoinState.ToCoinPile:
