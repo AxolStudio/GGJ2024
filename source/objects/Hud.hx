@@ -10,7 +10,7 @@ class Hud extends FlxTypedGroup<FlxSprite>
 	public var coinPileCounter:GameText;
 
 	public var shipHealthBar:FlxBar;
-	public var playerXP:FLxBar;
+	public var playerXP:FlxBar;
 	public var playerLevel:GameText;
 
 	public function new():Void
