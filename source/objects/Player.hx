@@ -93,6 +93,8 @@ class Player extends FlxTypedSpriteGroup<FlxSprite> implements IShip
 		{
 			health = maxHealth;
 		}
+		
+		Globals.PlayState.healthBar.updateBar();
 	}
 
 	public function spawn(X:Float, Y:Float):Void

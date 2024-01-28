@@ -82,6 +82,7 @@ class UpgradeSubState extends FlxSubState
 			Globals.PlayState.PlayerUpgrades = [];
 		Globals.PlayState.PlayerUpgrades.push(Which);
 		Globals.PlayState.PlayerMoney -= Globals.upgradeOptions.get(Which).cost;
+		Globals.PlayState.hud.UpdateUI();
 		Sounds.playSound("Upgrade purchase");
 		switch (Which)
 		{
@@ -98,23 +99,30 @@ class UpgradeSubState extends FlxSubState
 			case "Hull HP+":
 				Globals.PlayState.player.maxHealth += 50;
 				Globals.PlayState.player.health = Globals.PlayState.player.maxHealth;
+				Globals.PlayState.healthBar.updateBar();
 			case "Hull HP++":
 				Globals.PlayState.player.maxHealth += 100;
 				Globals.PlayState.player.health = Globals.PlayState.player.maxHealth;
+				Globals.PlayState.healthBar.updateBar();
 			case "Hull HP+++":
 				Globals.PlayState.player.maxHealth += 150;
 				Globals.PlayState.player.health = Globals.PlayState.player.maxHealth;
+				Globals.PlayState.healthBar.updateBar();
 			default:
 		}
 		for (u in upgrades)
 		{
 			u.button.toggled = false;
+			u.button.enabled = true;
+			
 			if (Globals.PlayState.PlayerMoney < u.upgradeData.cost
-				|| (u.upgradeData.requires != "" && !Globals.PlayState.PlayerUpgrades.contains(u.upgradeData.requires)))
+				|| (u.upgradeData.requires != "" && !Globals.PlayState.PlayerUpgrades.contains(u.upgradeData.requires))
+				|| (Globals.PlayState.PlayerUpgrades.contains(u.upgradeData.name)))
 			{
 				u.button.toggled = true;
 				u.button.enabled = false;
 			}
+			
 		}
 	}
 
