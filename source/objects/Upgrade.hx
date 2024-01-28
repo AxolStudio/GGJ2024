@@ -13,7 +13,7 @@ class Upgrade
 	
 	public function new():Void
 	{
-	
+		sprite = new FlxSprite();
 	}
 	
 	public function IsUnlocked():Bool

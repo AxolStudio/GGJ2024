@@ -18,12 +18,15 @@ class Wallet
 	public function Purchase(cost:Int)
 	{
 		value -= cost;
+		Globals.PlayState.hud.UpdateUI();
+		Globals.PlayState.upgradeMenu.UpdateUpgrades();
 	}
 	
 	public function AddValue(amount:Int)
 	{
 		value += amount;
 		Globals.PlayState.hud.UpdateUI();
+		Globals.PlayState.upgradeMenu.UpdateUpgrades();
 	}
 	
 	public function AddCoin(coin:Coin)
